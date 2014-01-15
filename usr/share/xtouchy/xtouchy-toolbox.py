@@ -7,7 +7,7 @@ import argparse
 
 current_rotation = 0 #assuming is bad, and this is no exception
 
-def rotate(direction):
+def rotate(direction, window):
     global current_rotation
     if direction == 0:
         return
@@ -29,8 +29,8 @@ def rotate(direction):
             os.system("xsetwacom --set " + wacom_id + " Rotate half")
         elif current_rotation == 3:
             os.system("xsetwacom --set " + wacom_id + " Rotate cw")
-    geom = _xt_root.geometry().split("+")
-    _xt_root.geometry("+" + geom[2] + "+" + geom[1])
+    geom = window.geometry().split("+")
+    window.geometry("+" + geom[2] + "+" + geom[1])
 
 def move(event, window):
     if (current_rotation == 1) or (current_rotation == 3):
@@ -48,7 +48,7 @@ def move(event, window):
     moveto = "+" + str(event.x_root) + "+" + str(event.y_root)
     window.geometry(moveto)
 
-def move_vkeyboard(event):
+def move_vkeyboard(event, window):
     print(event.x)
     if (event.x > int(settings["gui"]["btn_dims"])):
         print("Make KBD right") 
@@ -57,7 +57,6 @@ def move_vkeyboard(event):
 
 def open_main():
     btn_dims = int(settings["gui"]["btn_dims"])
-    global _xt_root
     _xt_root = Tk()
     if settings["gui"]["bypass_wm"] == "1":
         _xt_root.overrideredirect(1)
@@ -66,13 +65,13 @@ def open_main():
     root_frame = ttk.Frame(_xt_root, padding="0 0 0 0", width=btn_dims*3, height=btn_dims*3)
     root_frame.grid(column=1, row=0, sticky=("N", "W", "E", "S"))
     #Screen orientation
-    wrkbtn = ttk.Button(root_frame, width=2, text="↑", command=lambda: rotate(0))
+    wrkbtn = ttk.Button(root_frame, width=2, text="↑", command=lambda: rotate(0, _xt_root))
     wrkbtn.place(x=btn_dims, y=0, width=btn_dims, height=btn_dims)
-    wrkbtn = ttk.Button(root_frame, width=2, text="↓", command=lambda: rotate(2))
+    wrkbtn = ttk.Button(root_frame, width=2, text="↓", command=lambda: rotate(2, _xt_root))
     wrkbtn.place(x=btn_dims, y=btn_dims*2, width=btn_dims, height=btn_dims)
-    wrkbtn = ttk.Button(root_frame, width=2, text="←", command=lambda: rotate(1))
+    wrkbtn = ttk.Button(root_frame, width=2, text="←", command=lambda: rotate(1, _xt_root))
     wrkbtn.place(x=0, y=btn_dims, width=btn_dims, height=btn_dims)
-    wrkbtn = ttk.Button(root_frame, width=2, text="→", command=lambda: rotate(3))
+    wrkbtn = ttk.Button(root_frame, width=2, text="→", command=lambda: rotate(3, _xt_root))
     wrkbtn.place(x=btn_dims*2, y=btn_dims, width=btn_dims, height=btn_dims)
     #Close/Move button
     mvbtn = ttk.Button(root_frame, width=2, text="⇱")
@@ -81,7 +80,7 @@ def open_main():
     ttk.Button(root_frame, width=2, text="X", command=exit).place(x=btn_dims*2, y=0, width=btn_dims, height=btn_dims)
     #Toggle virtual keyboard
     tvkbtn = ttk.Button(root_frame, width=2, text="K")
-    tvkbtn.bind("<B1-Motion>", move_vkeyboard)
+    tvkbtn.bind("<B1-Motion>", lambda x: move_vkeyboard(x, _xt_root))
     tvkbtn.place(x=0, y=btn_dims*2, width=btn_dims, height=btn_dims)
     _xt_root.mainloop()
 
