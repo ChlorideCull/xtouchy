@@ -2,7 +2,7 @@
 from tkinter import Tk, ttk
 import os
 import time
-import json
+import configparser
 import argparse
 
 current_rotation = 0 #assuming is bad, and this is no exception
@@ -17,8 +17,8 @@ def rotate(direction):
     print("current_rotation: " + str(current_rotation))
     os.system("xrandr --screen 0 -o " + str(current_rotation))
     #0 = normal, 1 = left, 2 = inverted, 3 = right
-    if settings["wacom_device_id"] != "":
-        wacom_id = settings["wacom_device_id"]
+    if "tablet_name" in settings["wacom"]:
+        wacom_id = settings["wacom"]["wacom_id"]
         if current_rotation == 0:
             os.system("xsetwacom --set " + wacom_id + " Rotate none")
         elif current_rotation == 1:
@@ -48,65 +48,43 @@ def move(event, window):
 
 def move_vkeyboard(event):
     print(event.x)
-    if (event.x > 25):
+    if (event.x > int(settings["gui"]["btn_dims"])):
         print("Make KBD right") 
     elif (event.x < 0):
         print("Make KBD left")
 
 def open_main():
+    btn_dims = int(settings["gui"]["btn_dims"])
     global _xt_root
     _xt_root = Tk()
-    _xt_root.overrideredirect(1)
+    if settings["gui"]["bypass_wm"] == 1:
+        _xt_root.overrideredirect(1)
     _xt_root.title("Xtouchy Toolbox")
-    _xt_root.maxsize(75, 75) #25x25 per button
-    root_frame = ttk.Frame(_xt_root, padding="0 0 0 0", width=75, height=75)
+    _xt_root.maxsize(btn_dims*3, btn_dims*3)
+    root_frame = ttk.Frame(_xt_root, padding="0 0 0 0", width=btn_dims*3, height=btn_dims*3)
     root_frame.grid(column=1, row=0, sticky=("N", "W", "E", "S"))
     #Screen orientation
-    ttk.Button(root_frame, width=2, text="↑", command=lambda: rotate(0)).place(x=25, y=0, width=25, height=25)
-    ttk.Button(root_frame, width=2, text="↓", command=lambda: rotate(2)).place(x=25, y=50, width=25, height=25)
-    ttk.Button(root_frame, width=2, text="←", command=lambda: rotate(1)).place(x=0, y=25, width=25, height=25)
-    ttk.Button(root_frame, width=2, text="→", command=lambda: rotate(3)).place(x=50, y=25, width=25, height=25)
+    wrkbtn = ttk.Button(root_frame, width=2, text="↑", command=lambda: rotate(0))
+    wrkbtn.place(x=btn_dims, y=0, width=btn_dims, height=btn_dims)
+    wrkbtn = ttk.Button(root_frame, width=2, text="↓", command=lambda: rotate(2))
+    wrkbtn.place(x=btn_dims, y=btn_dims*2, width=btn_dims, height=btn_dims)
+    wrkbtn = ttk.Button(root_frame, width=2, text="←", command=lambda: rotate(1))
+    wrkbtn.place(x=0, y=btn_dims, width=btn_dims, height=btn_dims)
+    wrkbtn = ttk.Button(root_frame, width=2, text="→", command=lambda: rotate(3))
+    wrkbtn.place(x=btn_dims*2, y=btn_dims, width=btn_dims, height=btn_dims)
     #Close/Move button
     mvbtn = ttk.Button(root_frame, width=2, text="⇱")
     mvbtn.bind("<B1-Motion>", lambda x: move(x, _xt_root))
-    mvbtn.place(x=0, y=0, width=25, height=25)
-    ttk.Button(root_frame, width=2, text="X", command=exit).place(x=50, y=0, width=25, height=25)
+    mvbtn.place(x=0, y=0, width=btn_dims, height=btn_dims)
+    ttk.Button(root_frame, width=2, text="X", command=exit).place(x=btn_dims*2, y=0, width=btn_dims, height=btn_dims)
     #Toggle virtual keyboard
     tvkbtn = ttk.Button(root_frame, width=2, text="K")
     tvkbtn.bind("<B1-Motion>", move_vkeyboard)
-    tvkbtn.place(x=0, y=50, width=25, height=25)
+    tvkbtn.place(x=0, y=btn_dims*2, width=btn_dims, height=btn_dims)
     _xt_root.mainloop()
 
 if __name__ == "__main__":
     global settings
-    parser = argparse.ArgumentParser(description="Xtouchy Toolbox - an Tk TabletPC toolbox")
-    parser.add_argument("-s", "--set", dest="setoption", nargs=2, help="Sets the option [1] to the value of [2]")
-    parser.add_argument("-g", "--get", dest="getoption", nargs=1, help="Gets the option [1]")
-    parser.add_argument("-l", "--list", dest="listoption", action="store_true", help="Lists all options")
-    args = parser.parse_args()
-    settings_file_handle = open("/etc/xtouchy.json", mode="r")
-    settings = json.load(settings_file_handle)
-    settings_file_handle.close()
-    if args.setoption != None:
-        settings[args.setoption[0]] = args.setoption[1]
-        try:
-            settings_file_handle = open("/etc/xtouchy.json", mode="w")
-        except PermissionError:
-            print("Not sufficient permissions to write, did you forget to sudo?")
-            exit(2)
-        json.dump(settings, settings_file_handle)
-        settings_file_handle.close()
-        exit(0)
-    elif args.getoption != None:
-        if args.getoption in settings:
-            print(settings[args.getoption])
-            exit(0)
-        else:
-            print("No such variable")
-            exit(1)
-    elif args.listoption:
-        for x in settings:
-            print(x, ":", settings[x])
-        exit(0)
-    else:
-        open_main()
+    settings = configparser.ConfigParser()
+    settings.read('/etc/xtouchy.conf')
+    open_main()
