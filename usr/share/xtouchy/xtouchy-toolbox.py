@@ -48,7 +48,7 @@ def move(event, window):
 
 def move_vkeyboard(event):
     print(event.x)
-    if (event.x > 27):
+    if (event.x > 25):
         print("Make KBD right") 
     elif (event.x < 0):
         print("Make KBD left")
@@ -58,23 +58,23 @@ def open_main():
     _xt_root = Tk()
     _xt_root.overrideredirect(1)
     _xt_root.title("Xtouchy Toolbox")
-    _xt_root.maxsize(81, 75) #27 height per button, 25 width per button.
-    root_frame = ttk.Frame(_xt_root, padding="0 0 0 0", width=81, height=75)
+    _xt_root.maxsize(75, 75) #25x25 per button
+    root_frame = ttk.Frame(_xt_root, padding="0 0 0 0", width=75, height=75)
     root_frame.grid(column=1, row=0, sticky=("N", "W", "E", "S"))
     #Screen orientation
-    ttk.Button(root_frame, width=2, text="↑", command=lambda: rotate(0)).grid(column=2, row=1, sticky="N")
-    ttk.Button(root_frame, width=2, text="↓", command=lambda: rotate(2)).grid(column=2, row=3, sticky="S")
-    ttk.Button(root_frame, width=2, text="←", command=lambda: rotate(1)).grid(column=1, row=2, sticky="W")
-    ttk.Button(root_frame, width=2, text="→", command=lambda: rotate(3)).grid(column=3, row=2, sticky="E")
+    ttk.Button(root_frame, width=2, text="↑", command=lambda: rotate(0)).place(x=25, y=0, width=25, height=25)
+    ttk.Button(root_frame, width=2, text="↓", command=lambda: rotate(2)).place(x=25, y=50, width=25, height=25)
+    ttk.Button(root_frame, width=2, text="←", command=lambda: rotate(1)).place(x=0, y=25, width=25, height=25)
+    ttk.Button(root_frame, width=2, text="→", command=lambda: rotate(3)).place(x=50, y=25, width=25, height=25)
     #Close/Move button
     mvbtn = ttk.Button(root_frame, width=2, text="⇱")
     mvbtn.bind("<B1-Motion>", lambda x: move(x, _xt_root))
-    mvbtn.grid(column=1, row=1, sticky=("N", "W"))
-    ttk.Button(root_frame, width=2, text="X", command=exit).grid(column=3, row=1, sticky=("N", "E"))
+    mvbtn.place(x=0, y=0, width=25, height=25)
+    ttk.Button(root_frame, width=2, text="X", command=exit).place(x=50, y=0, width=25, height=25)
     #Toggle virtual keyboard
     tvkbtn = ttk.Button(root_frame, width=2, text="K")
     tvkbtn.bind("<B1-Motion>", move_vkeyboard)
-    tvkbtn.grid(column=1, row=3, sticky=("S", "W"))
+    tvkbtn.place(x=0, y=50, width=25, height=25)
     _xt_root.mainloop()
 
 if __name__ == "__main__":
