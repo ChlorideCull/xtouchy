@@ -9,6 +9,8 @@ current_rotation = 0 #assuming is bad, and this is no exception
 
 def rotate(direction):
     global current_rotation
+    if direction == 0:
+        return
     current_rotation += direction
     if current_rotation > 3:
         current_rotation -= 4
@@ -27,8 +29,8 @@ def rotate(direction):
             os.system("xsetwacom --set " + wacom_id + " Rotate half")
         elif current_rotation == 3:
             os.system("xsetwacom --set " + wacom_id + " Rotate cw")
-    geom = root.geometry().split("+")
-    root.geometry("+" + geom[2] + "+" + geom[1])
+    geom = _xt_root.geometry().split("+")
+    _xt_root.geometry("+" + geom[2] + "+" + geom[1])
 
 def move(event, window):
     if (current_rotation == 1) or (current_rotation == 3):
@@ -39,10 +41,10 @@ def move(event, window):
     else:
         width = window.winfo_screenwidth()
         height = window.winfo_screenheight()
-    if (event.x_root + 81 > width):
-        event.x_root = width - 81
-    if (event.y_root + 75 > height):
-        event.y_root = height - 75
+    if (event.x_root + window.winfo_height() > width):
+        event.x_root = width - window.winfo_height()
+    if (event.y_root + window.winfo_width() > height):
+        event.y_root = height - window.winfo_width()
     moveto = "+" + str(event.x_root) + "+" + str(event.y_root)
     window.geometry(moveto)
 
@@ -57,7 +59,7 @@ def open_main():
     btn_dims = int(settings["gui"]["btn_dims"])
     global _xt_root
     _xt_root = Tk()
-    if settings["gui"]["bypass_wm"] == 1:
+    if settings["gui"]["bypass_wm"] == "1":
         _xt_root.overrideredirect(1)
     _xt_root.title("Xtouchy Toolbox")
     _xt_root.maxsize(btn_dims*3, btn_dims*3)
