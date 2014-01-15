@@ -1,0 +1,35 @@
+# Lines prefixed with a hashtag/pound symbol are ignored.
+# Lines prefixed with -- specifies what modifier they
+# belong to (Shift, Alt, Alt Gr).
+# Spaces are interpreted as blank keys and are, when under
+# a modifier, replaced with the NoMod version.
+#
+# HOW TO MAKE YOUR OWN KEYMAP:
+# This is basically your entire keyboard except for the arrows,
+# bottom row (with the space), top row (with function keys), tab,
+# caps lock, shift, backspace, enter, right shift, end, page up,
+# page down, home, delete, insert, pause, scroll lock, break, print
+# screen, numpad and sys rq.
+--NoMod
+§1234567890+'
+qwertyuiopå"
+asdfghjklöä'
+<zxcvbnm,.-
+
+--ShiftMod
+½!"#¤%&/()=?`
+QWERTYUIOPÅ^
+ASDFGHJKLÖÄ*
+>ZXCVBNM;:_
+
+--AltMod
+§±²³´µ¶·¸¹°«'
+            
+            
+¼        ¬®­
+
+--AltGrMod
+¶¡@£$€¥{[]}\±
+@ł€®þ←↓→œþ¨~
+ªßðđŋħ̉̉̉jĸłøæ´
+|«»©“”nµ¸··̣ 

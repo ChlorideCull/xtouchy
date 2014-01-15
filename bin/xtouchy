@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /usr/share/xtouchy
+python3 /usr/share/xtouchy/xtouchy-toolbox.py
