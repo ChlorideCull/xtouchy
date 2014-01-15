@@ -22,13 +22,13 @@ def rotate(direction):
     if "tablet_name" in settings["wacom"]:
         wacom_id = settings["wacom"]["wacom_id"]
         if current_rotation == 0:
-            os.system("xsetwacom --set " + wacom_id + " Rotate none")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate none")
         elif current_rotation == 1:
-            os.system("xsetwacom --set " + wacom_id + " Rotate ccw")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate ccw")
         elif current_rotation == 2:
-            os.system("xsetwacom --set " + wacom_id + " Rotate half")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate half")
         elif current_rotation == 3:
-            os.system("xsetwacom --set " + wacom_id + " Rotate cw")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate cw")
     geom = _xt_root.geometry().split("+")
     _xt_root.geometry("+" + geom[2] + "+" + geom[1])
 
