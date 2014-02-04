@@ -20,7 +20,7 @@ def rotate(direction):
     os.system("xrandr --screen 0 -o " + str(current_rotation))
     #0 = normal, 1 = left, 2 = inverted, 3 = right
     if "tablet_name" in settings["wacom"]:
-        wacom_id = settings["wacom"]["wacom_id"]
+        wacom_id = settings["wacom"]["tablet_name"]
         if current_rotation == 0:
             os.system("xsetwacom --set \"" + wacom_id + "\" Rotate none")
         elif current_rotation == 1:
