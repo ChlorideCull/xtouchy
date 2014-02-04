@@ -20,15 +20,15 @@ def rotate(direction, window):
     os.system("xrandr --screen 0 -o " + str(current_rotation))
     #0 = normal, 1 = left, 2 = inverted, 3 = right
     if "tablet_name" in settings["wacom"]:
-        wacom_id = settings["wacom"]["wacom_id"]
+        wacom_id = settings["wacom"]["tablet_name"]
         if current_rotation == 0:
-            os.system("xsetwacom --set " + wacom_id + " Rotate none")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate none")
         elif current_rotation == 1:
-            os.system("xsetwacom --set " + wacom_id + " Rotate ccw")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate ccw")
         elif current_rotation == 2:
-            os.system("xsetwacom --set " + wacom_id + " Rotate half")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate half")
         elif current_rotation == 3:
-            os.system("xsetwacom --set " + wacom_id + " Rotate cw")
+            os.system("xsetwacom --set \"" + wacom_id + "\" Rotate cw")
     geom = window.geometry().split("+")
     window.geometry("+" + geom[2] + "+" + geom[1])
 
