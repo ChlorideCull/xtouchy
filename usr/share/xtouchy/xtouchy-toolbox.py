@@ -55,6 +55,11 @@ def move_vkeyboard(event, window):
     elif (event.x < 0):
         print("Make KBD left")
 
+def reset_and_exit(window):
+    if settings["gui"]["reset_rotation"] == 1:
+        rotate(0, window)
+    exit()
+
 def open_main():
     btn_dims = int(settings["gui"]["btn_dims"])
     _xt_root = Tk()
@@ -77,7 +82,7 @@ def open_main():
     mvbtn = ttk.Button(root_frame, width=2, text="⇱")
     mvbtn.bind("<B1-Motion>", lambda x: move(x, _xt_root))
     mvbtn.place(x=0, y=0, width=btn_dims, height=btn_dims)
-    ttk.Button(root_frame, width=2, text="X", command=exit).place(x=btn_dims*2, y=0, width=btn_dims, height=btn_dims)
+    ttk.Button(root_frame, width=2, text="X", command=lambda: reset_and_exit(_xt_root)).place(x=btn_dims*2, y=0, width=btn_dims, height=btn_dims)
     #Toggle virtual keyboard
     tvkbtn = ttk.Button(root_frame, width=2, text="K")
     tvkbtn.bind("<B1-Motion>", lambda x: move_vkeyboard(x, _xt_root))
